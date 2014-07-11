@@ -1,0 +1,6 @@
+*.lnk
+.ceylon/
+.settings/
+modules/
+.project
+.classpath
