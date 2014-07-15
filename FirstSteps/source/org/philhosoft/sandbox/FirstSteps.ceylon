@@ -11,7 +11,7 @@ class FirstSteps()
 		String simple = "Simple string (multiline), with escapes\nand with Unicode literals:
 		                 \{#00B6} - Numerical (hexa) - 00B6
 		                 \{PILCROW SIGN} - Unicode official name - PILCROW SIGN
-		                 ¶ - Literal pasted in the code";
+		                 Â¶ - Literal pasted in the code";
 		print(simple);
 
 		title("String interpolation");
@@ -22,7 +22,7 @@ class FirstSteps()
 			Integer i = 42M; // M = mega = 1e6
 			Integer b = $0100_1010; // Binary literal
 			Integer h = #BABE_1BEE; // Hexadecimal literal
-			Float f = 3.141_592_653_589_793_23u; // u = µ = micro = 1e-6
+			Float f = 3.141_592_653_589_793_23u; // u = Âµ = micro = 1e-6
 			print("I can embed a reference to a character ``c`` or string (``s.uppercased``)
 			       or to numbers like ``i`` or even computations: ``i * f``.
 			       No formatting? Binary: ``b`` - Hexa: ``h``".normalized); // normalized => no line breaks
@@ -50,6 +50,7 @@ class FirstSteps()
 		print(maybe);
 
 		title("Sequence of key, value pairs");
+		// Using type inference
 		value almostMap = [ "1"->"a", "2"->"b", "3"->"c" ];
 		print(almostMap);
 	}
@@ -60,13 +61,39 @@ class FirstSteps()
 		// Skipping Character, String, Integer, Float seen above
 
 		// Official name for {String+}
-		Iterable<String> iterable = { "Alpha", "Beta", "Gamma" };
+		Iterable<String> iterable = { "Alpha", "Beta", "Gamma", "Alpha" };
 		// Official name for [String+]
-		Sequence<String> sequence = [ "X", "Y", "Z" ];
+		Sequence<String->String> sequence = [ "one"->"ichi", "two"->"ni", "three"->"san", "seven"->"sichi", "seven"->"nana" ];
 
-		title("List of strings (from iterable)");
-		List<String> list = Array(iterable);
-		list.append("One").append("Two").append("Three");
+		title("List of strings (array)");
+		List<String> list = arrayOfSize { size = 5; element = "Yay!"; }; // Named parameters
+		assert(is Array<String> list); // Narrow down the type to Array
+		list.set(2, "Wee!");
 		print(list);
+
+		title("Set of strings (from iterable)");
+		Set<String> set = LazySet(iterable);
+		print(set);
+		print(set.contains("alpha"));
+
+		title("Map of strings to strings (from sequence)");
+		Map<String, String> map = LazyMap(sequence);
+		print(map);
+		print(map["seven"]);
+
+		title("Range of characters");
+		Range<Character> rl = 'a'..'z';
+		print(rl);
+		print("x in range? ``'x' in rl``");
+
+		title("Segment of characters");
+		Character[] ru = 'A':26;
+		print(ru);
+		print("X in segment? ``'X' in ru``");
+	}
+
+	shared void control()
+	{
+		;
 	}
 }
