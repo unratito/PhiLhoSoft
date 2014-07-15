@@ -1,0 +1,36 @@
+Problems with the Ceylon IDE
+
+Using Eclipse Juno and the official stable Ceylon plugin, installed via the plugin manager.
+Update: upgraded (2014-07-14) to the plugin at http://ceylon-lang.org/eclipse/development/ to check if some issues has disappeared.
+
+Editor:
+
+- I have the option"Automatically close (everything)" set in the Java > Typing preferences (does they apply to Ceylon?). And the "Automatically insert at correct position (semi-colons and braces)".
+When I type " I have the closing double quote and the caret goes between them. OK. In Java, if I hit semi-colon, it goes at the end of the line, if it is not already there). In Ceylon, it goes between the quotes. Why not, but the change of behavior is a bit disturbing.
+- I have set the option Content Assist > Insertion > Completion overwrites, ie. if, in Java, I have a completion proposal which I choose, it overwrites the remainder of the text after the caret: `cu|foo` (with | being the caret), Enter ends in `current`, not in `currentfoo`. Ceylon doesn't take in account this setting and completes while keeping the end.
+- I have a French keyboard where the back-tick is a dead key: if I hit back-tick then a, I get à. And to type a back-tick, we have to do AltGr+7.
+When I type a single back-tick, nothing happens (the system waits for another key). When I type the second back-tick, I get four with the caret in the middle (OK), but before the four ticks, I get a è! Ie. in "Fo|om", I type two `, I get "Foè``|``om"
+- The auto-completion doesn't work on initials? If I have a variable someThing, and type sT<Ctrl+Space>, I don't get auto-completion. It works only if I type s<Ctrl+Space>. Idem for class names.
+- Auto-completion menu doesn't show return types, or type of arguments. If I declare a List<String> and use the .append() method on it, I don't see the documentation of the method. Either it isn't written, or it isn't displayed.
+- F3 on List goes to List.class, not List.ceylon, and the syntax highlighting there is strange (for Java?).
+- Undo is often unavailable.
+
+
+
+
+Obsolete remarks in dev plugin (fixed)
+- No indentation preservation when hitting return. I expect the caret to be at least at the level of indentation of the line where I hit Return, but it goes to the left margin. Note: if that's relevant, I indent with tabs...
+- The Ctrl+Alt+R keyboard shortcut for renaming an identifier doesn't work in a Ceylon edition window. In see Rename in the menu, associated to Alt+R. Unusual, and breaks the Windows convention of using Alt+letter to activate menu bar items. And it renames in a dialog box, not inline.
+Update: it works in dev plugin, but for some reason, it looses the current selection (part of the name) and selects the whole identifier. Moreover, after the rename, Ctrl+Z doesn't work, I have to do Edit > Undo Rename.
+
+
+
+# Side note: in a function body, why I can't have:
+
+    variable z = "Foom";
+
+It accepts `value`, or `variable String`, but not a simple `variable`. Why type inference doesn't work here?
+
+# Why Ceylon restricts the places where an underscore can go in a number literal?
+It can annoy Indian users (they place separators differently), I might want to separate only some parts or do more mnemonic groups (like 3.14_15_926_535), etc.
+
