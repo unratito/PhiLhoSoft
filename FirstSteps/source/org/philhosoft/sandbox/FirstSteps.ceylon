@@ -53,6 +53,11 @@ class FirstSteps()
 		// Using type inference
 		value almostMap = [ "1"->"a", "2"->"b", "3"->"c" ];
 		print(almostMap);
+
+		title("Tuple");
+		// Heterogenous sequence
+		value tuple = [ true, 1, 2.0, '§', "Boo", "k"->"v" ];
+		print(tuple);
 	}
 
 	shared void someBaseTypes()
@@ -65,6 +70,10 @@ class FirstSteps()
 		// Official name for [String+]
 		Sequence<String->String> sequence = [ "one"->"ichi", "two"->"ni", "three"->"san", "seven"->"sichi", "seven"->"nana" ];
 
+		// Just use them...
+		print(iterable.contains("Alpha"));
+		print(sequence.collect((String->String element) => element.key == "seven" then "Foo" else element.item));
+
 		title("List of strings (array)");
 		List<String> list = arrayOfSize { size = 5; element = "Yay!"; }; // Named parameters
 		assert(is Array<String> list); // Narrow down the type to Array
@@ -72,12 +81,18 @@ class FirstSteps()
 		print(list);
 
 		title("Set of strings (from iterable)");
-		Set<String> set = LazySet(iterable);
+// Removed in 1.1?
+//		Set<String> set = LazySet(iterable);
+// In non-final 1.1, that's the only concrete Set we have!
+		Set<String> set = emptySet;
 		print(set);
 		print(set.contains("alpha"));
 
 		title("Map of strings to strings (from sequence)");
-		Map<String, String> map = LazyMap(sequence);
+// Removed in 1.1?
+//		Map<String, String> map = LazyMap(sequence);
+// In non-final 1.1, that's the only concrete Map we have!
+		Map<String, String> map = emptyMap;
 		print(map);
 		print(map["seven"]);
 
@@ -94,6 +109,13 @@ class FirstSteps()
 
 	shared void control()
 	{
-		;
+		stepTitle("Controls: conditionals and loops");
+
+		Boolean a = true;
+		variable Boolean b = false;
+		if (b = a) // Ow, Ceylon allows this... :-(
+		{
+			print("Ow");
+		}
 	}
 }

@@ -14,6 +14,7 @@ When I type a single back-tick, nothing happens (the system waits for another ke
 - Auto-completion menu doesn't show return types, or type of arguments. If I declare a List<String> and use the .append() method on it, I don't see the documentation of the method. Either it isn't written, or it isn't displayed.
 - F3 on List goes to List.class, not List.ceylon, and the syntax highlighting there is strange (for Java?).
 - Undo is often unavailable.
+- If I paste a cut line at the same level of indentation than the origin, I get one more level of indentation! (tabs)
 
 
 
