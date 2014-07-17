@@ -1,3 +1,4 @@
+import ceylon.collection { HashSet, HashMap, LinkedList }
 class FirstSteps()
 {
 	print("Hello World!");
@@ -7,7 +8,7 @@ class FirstSteps()
 		stepTitle("Exploring literals");
 
 		title("Simple multiline string");
-		// Indenting is mandatory, and removed by the compiler
+		// Indenting of string content is mandatory, and removed by the compiler. Newline are kept, though.
 		String simple = "Simple string (multiline), with escapes\nand with Unicode literals:
 		                 \{#00B6} - Numerical (hexa) - 00B6
 		                 \{PILCROW SIGN} - Unicode official name - PILCROW SIGN
@@ -18,14 +19,14 @@ class FirstSteps()
 		void fn() // No anonymous blocks allowed, apparently, so I make a function to scope the variables
 		{
 			Character c = 'z';
-			String s = "Foo";
+			String s = "Foo déjà";
 			Integer i = 42M; // M = mega = 1e6
 			Integer b = $0100_1010; // Binary literal
 			Integer h = #BABE_1BEE; // Hexadecimal literal
 			Float f = 3.141_592_653_589_793_23u; // u = µ = micro = 1e-6
 			print("I can embed a reference to a character ``c`` or string (``s.uppercased``)
 			       or to numbers like ``i`` or even computations: ``i * f``.
-			       No formatting? Binary: ``b`` - Hexa: ``h``".normalized); // normalized => no line breaks
+			       No formatting? Binary: ``b`` - Hexa: ``h``");
 		}
 		fn();
 
@@ -33,7 +34,7 @@ class FirstSteps()
 		String literal = """
 		                    String with no "interpolation" nor "escapes":
 		                    No escape \o/ and ``no interpolation``.
-		                    """; // Newlines are kept as is
+		                    """.normalized; // normalized => no line breaks
 		print(literal);
 
 		title("An iterable literal");
@@ -45,9 +46,10 @@ class FirstSteps()
 		print(sequence);
 		print(sequence[1]);
 		// Another notation
-		String[] array = [ "ichi", "ni", "san" ];
-		String? maybe = array[10]; // String or null
-		print(maybe);
+		String[] almostArray = [ "ichi", "ni", "san" ];
+		String? probably = almostArray[2]; // String or null
+		String? maybe = almostArray[10];
+		print("``maybe else "(null)"`` / ``probably else "(null)"``");
 
 		title("Sequence of key, value pairs");
 		// Using type inference
@@ -58,6 +60,11 @@ class FirstSteps()
 		// Heterogenous sequence
 		value tuple = [ true, 1, 2.0, '§', "Boo", "k"->"v" ];
 		print(tuple);
+		print(tuple[4]);
+
+		title("Anonymous function");
+		value funfunfun = (String p) => p + p + p;
+		print(almostArray.map(funfunfun));
 	}
 
 	shared void someBaseTypes()
@@ -68,31 +75,33 @@ class FirstSteps()
 		// Official name for {String+}
 		Iterable<String> iterable = { "Alpha", "Beta", "Gamma", "Alpha" };
 		// Official name for [String+]
-		Sequence<String->String> sequence = [ "one"->"ichi", "two"->"ni", "three"->"san", "seven"->"sichi", "seven"->"nana" ];
+		Sequence<String> sequence = [ "Harry", "Ron", "Hermione" ];
+		// [String->String+]
+		Sequence<Entry<String, String>> sequenceOfEntries = [ "one"->"ichi", "two"->"ni", "three"->"san", "seven"->"shichi", "seven"->"nana" ];
 
 		// Just use them...
+		title("Iterable / Sequence API");
 		print(iterable.contains("Alpha"));
-		print(sequence.collect((String->String element) => element.key == "seven" then "Foo" else element.item));
+		print(sequence.filter((String name) => name.startsWith("H")));
+		print(sequenceOfEntries.collect((String->String element) => element.key == "seven" then "Foo" else element.item));
 
 		title("List of strings (array)");
 		List<String> list = arrayOfSize { size = 5; element = "Yay!"; }; // Named parameters
-		assert(is Array<String> list); // Narrow down the type to Array
+		assert(is Array<String> list); // Narrow down the type to Array, which is mutable
 		list.set(2, "Wee!");
 		print(list);
 
+		title("List of strings (lnked list)");
+		List<String> llist = LinkedList(sequence);
+		print(llist);
+
 		title("Set of strings (from iterable)");
-// Removed in 1.1?
-//		Set<String> set = LazySet(iterable);
-// In non-final 1.1, that's the only concrete Set we have!
-		Set<String> set = emptySet;
+		Set<String> set = HashSet<String>(iterable);
 		print(set);
 		print(set.contains("alpha"));
 
 		title("Map of strings to strings (from sequence)");
-// Removed in 1.1?
-//		Map<String, String> map = LazyMap(sequence);
-// In non-final 1.1, that's the only concrete Map we have!
-		Map<String, String> map = emptyMap;
+		Map<String, String> map = HashMap(sequenceOfEntries);
 		print(map);
 		print(map["seven"]);
 
@@ -107,15 +116,76 @@ class FirstSteps()
 		print("X in segment? ``'X' in ru``");
 	}
 
-	shared void control()
+	shared void simpleControls()
 	{
-		stepTitle("Controls: conditionals and loops");
+		stepTitle("Simple controls: conditionals and loops");
 
-		Boolean a = true;
+		title("Source of bugs");
 		variable Boolean b = false;
-		if (b = a) // Ow, Ceylon allows this... :-(
+		if (b = true) // Ouch, Ceylon allows this... :-( Newbies write if (a == true) and often forget the second =...
 		{
-			print("Ow");
+			print("Ouch!");
+		}
+
+		title("Simple if");
+		Integer a = 42;
+		if (a == 6 * 7)
+		{
+			print("Math is awesome!");
+		}
+
+		title("Simple for");
+		for (n in 39..a)
+		{
+			print("Loooooping... ``n``");
+		}
+		// Can be explicit on type
+		for (Integer n in 45..a)
+		{
+			print("Unloooping... ``n``");
+		}
+		// Can have an else clause
+		else
+		{
+			print("Finished the loop without interruption");
+		}
+
+		title("for each with index");
+		value jNumbers = [ "ichi", "ni", "san", "shi", "go", "roku", "shichi" ];
+		for (idx->jn in entries(jNumbers))
+		{
+			print("Counting: ``idx + 1`` is ``jn``");
+		}
+
+		title("Zip this");
+		value eNumbers = [ "one", "two", "three", "four", "five", "six", "seven" ];
+		for (en->jn in zipEntries(eNumbers, jNumbers))
+		{
+			print("``en`` --> ``jn``");
+		}
+
+		title("Meanwhile...");
+		variable Integer n = 0;
+		variable [Integer*] seq = [];
+		while (n <= 5)
+		{
+			seq = seq.withTrailing(n++);
+		}
+		print(seq);
+
+		title("Trying hard!");
+		try
+		{
+			print("Before");
+			if (n > 1)
+			{
+				throw Exception { description = "Too big!"; cause = null; };
+			}
+			print("After");
+		}
+		catch (e)
+		{
+			print(e.message);
 		}
 	}
 }
