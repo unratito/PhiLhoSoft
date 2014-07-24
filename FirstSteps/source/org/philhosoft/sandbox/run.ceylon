@@ -5,6 +5,7 @@ shared void run()
 	firstSteps.exploringLiterals();
 	firstSteps.someBaseTypes();
 	firstSteps.simpleControls();
+	firstSteps.experiments();
 }
 
 void stepTitle(String title)

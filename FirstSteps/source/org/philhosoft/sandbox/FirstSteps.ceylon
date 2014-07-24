@@ -1,4 +1,5 @@
 import ceylon.collection { HashSet, HashMap, LinkedList }
+
 class FirstSteps()
 {
 	print("Hello World!");
@@ -61,6 +62,10 @@ class FirstSteps()
 		value tuple = [ true, 1, 2.0, '§', "Boo", "k"->"v" ];
 		print(tuple);
 		print(tuple[4]);
+
+		title("Regular function");
+		String triple(String p) { return p + p + p; }
+		print(triple("Fun "));
 
 		title("Anonymous function");
 		value funfunfun = (String p) => p + p + p;
@@ -164,11 +169,18 @@ class FirstSteps()
 			print("``en`` --> ``jn``");
 		}
 
-		title("Meanwhile...");
+		title("Meanwhile... let's switch the lights");
 		variable Integer n = 0;
 		variable [Integer*] seq = [];
-		while (n <= 5)
+		while (n < 5)
 		{
+			switch (n)
+			case (0) { print("Zero"); }
+			case (1) { print("One"); }
+			case (2) { print("Two"); }
+			case (3) { print("Three"); }
+			else { print("A lot"); }
+
 			seq = seq.withTrailing(n++);
 		}
 		print(seq);
@@ -187,5 +199,32 @@ class FirstSteps()
 		{
 			print(e.message);
 		}
+		finally
+		{
+			print("Shown whatever the result");
+		}
+	}
+
+	shared void experiments()
+	{
+		stepTitle("Some experiments");
+
+		void mutating(variable Integer n, variable LinkedList<String> l) { n += 4; l.set(1, "Yo"); }
+		void enabling(String? maybe)
+		{
+			assert(exists maybe);
+			print(maybe);
+		}
+
+		variable Integer n = 5;
+		variable LinkedList<String> l = LinkedList([ "Foo", "Bar", "Baz" ]);
+		mutating(n, l);
+		print(n);
+		print(l);
+
+		String? possible = "Yeah";
+		enabling(possible); // The assert inside doesn't validate here
+		String sure = "Hey " + (possible else "Bah");
+		print(sure);
 	}
 }
