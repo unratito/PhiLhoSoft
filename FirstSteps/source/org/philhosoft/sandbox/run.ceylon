@@ -5,6 +5,8 @@ shared void run()
 	firstSteps.exploringLiterals();
 	firstSteps.someBaseTypes();
 	firstSteps.simpleControls();
+	firstSteps.functions();
+
 	firstSteps.experiments();
 }
 

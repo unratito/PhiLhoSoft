@@ -205,6 +205,59 @@ class FirstSteps()
 		}
 	}
 
+	shared void functions()
+	{
+		stepTitle("Functions");
+
+		title("Defining a simple function");
+		// Mandatory parameters called by position
+		String simple(String s, Integer i, Float f)
+		{
+			return "``s`` / ``i`` / ``f``";
+		}
+		print(simple("Some numbers", 42, 3.1415926));
+		// We can already use the parameters by name. Notice the usage of semi-colon as separator
+		print(simple { f = 3.1415926; i = 42; s = "Same numbers"; });
+
+		title("Optional parameters with defaults and vararg");
+		String options(Integer perhapsI = 3333, String maybeS = "not provided", Integer* someI)
+		{
+			return "``perhapsI`` / ``maybeS`` / ``someI``";
+		}
+		print(options());
+		print(options(1));
+		print(options(2, "Foo"));
+		print(options(3, "Bar", 44));
+		print(options(4, "Baz", 3, 14, 15, 926));
+		print(options { someI = [ 5, 7, 11 ]; maybeS = "Provided"; });
+
+		title("Fat arrow for expressions");
+		String(Integer) faA = (Integer v) => "Value A[``v``]";
+		String(Integer) faB = (Integer v) => "Value B{``v``}";
+		// Infered type
+		function faC(Integer v) => "Value C<``v``>";
+		// In a variable
+		value faD = (Integer v) => "Value D/``v``\\";
+
+		String caller(Integer v, String(Integer) f) => f(v);
+
+		print([ faA(11), faB(121), faC(12321), faD(1235321) ]);
+		print(caller(22, faA));
+		print(caller(33, faB));
+		print(caller(55, faC));
+		print(caller(77, faD));
+
+		title("Function as infix operator");
+		function plus(Number x, Number y)
+		{
+			if (is Integer x, is Integer y) { return x + y; }
+			else if (is Float x, is Float y) { return x + y; }
+			else { return 0; }
+		}
+		print(plus(13, 21));
+		print(21.89 plus 13.55);
+	}
+
 	shared void experiments()
 	{
 		stepTitle("Some experiments");
