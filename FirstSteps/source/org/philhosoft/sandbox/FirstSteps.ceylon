@@ -246,16 +246,71 @@ class FirstSteps()
 		print(caller(33, faB));
 		print(caller(55, faC));
 		print(caller(77, faD));
+	}
 
-		title("Function as infix operator");
-		function plus(Number x, Number y)
+	shared void declaringTypes()
+	{
+		stepTitle("Declaring types");
+
+		title("Simple class declaration");
+		class Concrete(String name, Integer count)
 		{
-			if (is Integer x, is Integer y) { return x + y; }
-			else if (is Float x, is Float y) { return x + y; }
-			else { return 0; }
+			// A public variable
+			shared String weight = "``count`` kg";
+			// A void method
+			shared void showName() { print(name); }
+			// Shortcut method notation; default means "can be overridden"
+			shared default Integer getValue() => count * name.size;
 		}
-		print(plus(13, 21));
-		print(21.89 plus 13.55);
+		value concrete = Concrete("You rock", 10);
+		print(concrete);
+		concrete.showName();
+		print("Value: ``concrete.getValue()`` with weight of ``concrete.weight``");
+
+		title("Simple interface declaration and usage");
+		interface BluePrint
+		{
+			shared formal void doPrint(Integer v); // To be defined
+			// A method in an interface can have an implementation (but not state)
+			shared String getColor() => "#0000FF"; // Blue, of course
+		}
+		interface BlueFish
+		{
+			shared formal Boolean isOK;
+		}
+		class Printer(String pathToPrinter) extends Concrete(pathToPrinter, 42) satisfies BluePrint
+		{
+			shared actual void doPrint(Integer v) { showName(); }
+			// Override
+			shared actual Integer getValue() => getColor().size * super.getValue();
+		}
+		class Bluish(shared Integer hue) satisfies BluePrint
+		{
+			shared actual void doPrint(Integer v) { print("Indigo #``v``"); }
+		}
+		value bluish = Bluish(123);
+		bluish.doPrint(bluish.hue);
+
+		title("Algebraic types");
+		Printer | Bluish maybeBlue = Printer("/path/to/printer");
+		maybeBlue.doPrint(11011);
+		if (is Printer maybeBlue)
+		{
+			print("Value is ``maybeBlue.getValue()``");
+		}
+		//Printer & Bluish indigoPrinter; // Legal, but what to put there?
+		class IndigoPrinter(Boolean b) satisfies BluePrint & BlueFish
+		{
+			shared actual void doPrint(Integer v) { print(b then v else 31415); }
+
+			shared actual Boolean isOK = b;
+		}
+		value indigoPrinter = IndigoPrinter(true);
+		value printerIndigo = IndigoPrinter(false);
+		indigoPrinter.doPrint(42);
+		printerIndigo.doPrint(42);
+		print("One is ``indigoPrinter.isOK`` while the other is ``printerIndigo.isOK``");
+		print("One is ``indigoPrinter.getColor()`` while the other is also ``printerIndigo.getColor()``");
 	}
 
 	shared void experiments()

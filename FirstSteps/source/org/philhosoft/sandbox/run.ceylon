@@ -6,6 +6,7 @@ shared void run()
 	firstSteps.someBaseTypes();
 	firstSteps.simpleControls();
 	firstSteps.functions();
+	firstSteps.declaringTypes();
 
 	firstSteps.experiments();
 }
