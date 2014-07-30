@@ -291,26 +291,54 @@ class FirstSteps()
 		value bluish = Bluish(123);
 		bluish.doPrint(bluish.hue);
 
-		title("Algebraic types");
+		title("Algebraic types: union (or)");
 		Printer | Bluish maybeBlue = Printer("/path/to/printer");
 		maybeBlue.doPrint(11011);
 		if (is Printer maybeBlue)
 		{
 			print("Value is ``maybeBlue.getValue()``");
 		}
-		//Printer & Bluish indigoPrinter; // Legal, but what to put there?
+		// More realistic (?)
+		String | Integer someValue(Printer | Bluish pOrB)
+		{
+			if (is Printer pOrB)
+			{
+				return pOrB.getValue(); // We know for sure that pOrB is a Printer, we return an Integer
+			}
+			return pOrB.getColor(); // It is necessarily a Bluish, we return a String
+		}
+		void printStringOrInteger(String | Integer what)
+		{
+			if (is String what)
+			{
+				print("Got string: " + what);
+			}
+			else
+			{
+				print("Got integer: ``what``");
+			}
+		}
+		printStringOrInteger(someValue(bluish));
+		printStringOrInteger(someValue(maybeBlue));
+
+		title("Algebraic types: intersection (and)");
+		// Printer & Bluish pb; // Legal, but is actually a Nothing, we can't do anything with it!
+
 		class IndigoPrinter(Boolean b) satisfies BluePrint & BlueFish
 		{
 			shared actual void doPrint(Integer v) { print(b then v else 31415); }
 
 			shared actual Boolean isOK = b;
 		}
-		value indigoPrinter = IndigoPrinter(true);
+		BluePrint & BlueFish indigoPrinter = IndigoPrinter(true);
 		value printerIndigo = IndigoPrinter(false);
 		indigoPrinter.doPrint(42);
 		printerIndigo.doPrint(42);
 		print("One is ``indigoPrinter.isOK`` while the other is ``printerIndigo.isOK``");
 		print("One is ``indigoPrinter.getColor()`` while the other is also ``printerIndigo.getColor()``");
+
+		title("Enumerated types");
+		// TODO...
 	}
 
 	shared void experiments()
