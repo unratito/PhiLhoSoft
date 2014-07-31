@@ -7,6 +7,7 @@ shared void run()
 	firstSteps.simpleControls();
 	firstSteps.functions();
 	firstSteps.declaringTypes();
+	firstSteps.accessors();
 
 	firstSteps.experiments();
 }

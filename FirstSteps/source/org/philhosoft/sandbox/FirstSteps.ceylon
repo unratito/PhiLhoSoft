@@ -27,7 +27,7 @@ class FirstSteps()
 			Float f = 3.141_592_653_589_793_23u; // u = µ = micro = 1e-6
 			print("I can embed a reference to a character ``c`` or string (``s.uppercased``)
 			       or to numbers like ``i`` or even computations: ``i * f``.
-			       No formatting? Binary: ``b`` - Hexa: ``h``");
+			       No formatting, though. Binary: ``b`` - Hexa: ``h``");
 		}
 		fn();
 
@@ -35,14 +35,14 @@ class FirstSteps()
 		String literal = """
 		                    String with no "interpolation" nor "escapes":
 		                    No escape \o/ and ``no interpolation``.
-		                    """.normalized; // normalized => no line breaks
+		                    """.normalized; // normalized => formatting line breaks are removed
 		print(literal);
 
-		title("An iterable literal");
+		title("Literal for iterable");
 		{String+} iterable = { "a", "b", "c" };
 		print(iterable); // When printing it, the iterable becomes a sequence
 
-		title("A sequence literal");
+		title("Literal for sequence");
 		[String+] sequence = [ "A", "B", "C" ];
 		print(sequence);
 		print(sequence[1]);
@@ -50,10 +50,11 @@ class FirstSteps()
 		String[] almostArray = [ "ichi", "ni", "san" ];
 		String? probably = almostArray[2]; // String or null
 		String? maybe = almostArray[10];
+		// The else keyword here provides the altenative (second part) if the first part is null
 		print("``maybe else "(null)"`` / ``probably else "(null)"``");
 
 		title("Sequence of key, value pairs");
-		// Using type inference
+		// Using type inference (value)
 		value almostMap = [ "1"->"a", "2"->"b", "3"->"c" ];
 		print(almostMap);
 
@@ -63,7 +64,7 @@ class FirstSteps()
 		print(tuple);
 		print(tuple[4]);
 
-		title("Regular function");
+		title("Simple, classical named function definition");
 		String triple(String p) { return p + p + p; }
 		print(triple("Fun "));
 
@@ -111,14 +112,14 @@ class FirstSteps()
 		print(map["seven"]);
 
 		title("Range of characters");
-		Range<Character> rl = 'a'..'z';
-		print(rl);
-		print("x in range? ``'x' in rl``");
+		Range<Character> rc = 'a'..'z';
+		print(rc);
+		print("x in range? ``'x' in rc``");
 
 		title("Segment of characters");
-		Character[] ru = 'A':26;
-		print(ru);
-		print("X in segment? ``'X' in ru``");
+		Character[] sc = 'A':26;
+		print(sc);
+		print("X in segment? ``'X' in sc``");
 	}
 
 	shared void simpleControls()
@@ -127,7 +128,7 @@ class FirstSteps()
 
 		title("Source of bugs");
 		variable Boolean b = false;
-		if (b = true) // Ouch, Ceylon allows this... :-( Newbies write if (a == true) and often forget the second =...
+		if (b = true) // Ouch, Ceylon allows this too... :-( Newbies write if (a == true) and often forget the second =...
 		{
 			print("Ouch!");
 		}
@@ -216,10 +217,10 @@ class FirstSteps()
 			return "``s`` / ``i`` / ``f``";
 		}
 		print(simple("Some numbers", 42, 3.1415926));
-		// We can already use the parameters by name. Notice the usage of semi-colon as separator
+		// We can already use the parameters by name, in any order. Notice the usage of semi-colon as separator.
 		print(simple { f = 3.1415926; i = 42; s = "Same numbers"; });
 
-		title("Optional parameters with defaults and vararg");
+		title("Optional parameters with defaults and varargs");
 		String options(Integer perhapsI = 3333, String maybeS = "not provided", Integer* someI)
 		{
 			return "``perhapsI`` / ``maybeS`` / ``someI``";
@@ -236,7 +237,7 @@ class FirstSteps()
 		String(Integer) faB = (Integer v) => "Value B{``v``}";
 		// Infered type
 		function faC(Integer v) => "Value C<``v``>";
-		// In a variable
+		// Infered in a variable
 		value faD = (Integer v) => "Value D/``v``\\";
 
 		String caller(Integer v, String(Integer) f) => f(v);
@@ -270,18 +271,21 @@ class FirstSteps()
 		title("Simple interface declaration and usage");
 		interface BluePrint
 		{
-			shared formal void doPrint(Integer v); // To be defined
+			// formal = to be defined (abstract)
+			shared formal void doPrint(Integer v);
 			// A method in an interface can have an implementation (but not state)
 			shared String getColor() => "#0000FF"; // Blue, of course
 		}
 		interface BlueFish
 		{
+			// Looks like a variable, but is actually an accessor
 			shared formal Boolean isOK;
 		}
 		class Printer(String pathToPrinter) extends Concrete(pathToPrinter, 42) satisfies BluePrint
 		{
+			// actual = provides an implementation (@Override)
 			shared actual void doPrint(Integer v) { showName(); }
-			// Override
+			// Here, actually = override existing implementation
 			shared actual Integer getValue() => getColor().size * super.getValue();
 		}
 		class Bluish(shared Integer hue) satisfies BluePrint
@@ -307,19 +311,9 @@ class FirstSteps()
 			}
 			return pOrB.getColor(); // It is necessarily a Bluish, we return a String
 		}
-		void printStringOrInteger(String | Integer what)
-		{
-			if (is String what)
-			{
-				print("Got string: " + what);
-			}
-			else
-			{
-				print("Got integer: ``what``");
-			}
-		}
-		printStringOrInteger(someValue(bluish));
-		printStringOrInteger(someValue(maybeBlue));
+		// Calling a package-level function
+		printValue(someValue(bluish));
+		printValue(someValue(maybeBlue));
 
 		title("Algebraic types: intersection (and)");
 		// Printer & Bluish pb; // Legal, but is actually a Nothing, we can't do anything with it!
@@ -339,6 +333,60 @@ class FirstSteps()
 
 		title("Enumerated types");
 		// TODO...
+	}
+
+	shared void accessors()
+	{
+		stepTitle("Accessors");
+
+		void before()
+		{
+			class Exposure(arg)
+			{
+				// We expose all the members are public!
+				shared String arg;
+				shared String val = "Value " + arg.reversed;
+				shared variable Integer count = val.size;
+
+				// Refine (override) the method from Object
+				string => "``arg`` => ``val`` / ``count``";
+			}
+
+			value exp = Exposure("Public");
+			print(exp.arg + "/" + exp.val);
+			print(exp);
+			exp.count = 1;
+			print(exp);
+		}
+
+		void after()
+		{
+			class Exposure(arg)
+			{
+				// We change the implementation, and leave unchanged the calling code
+				shared String arg;
+				shared String val = "Value " + arg.reversed;
+				variable Integer newCount = 5 * arg.size / val.size;
+				shared Integer count => newCount;
+				assign count
+				{
+					newCount = count;
+				}
+
+				// Refine (override) the method from Object
+				string => "``arg`` => ``val`` / ``count``";
+			}
+
+			value exp = Exposure("Public");
+			print(exp.arg + "/" + exp.val);
+			print(exp);
+			exp.count = 1;
+			print(exp);
+		}
+
+		before();
+		print("");
+		after();
 	}
 
 	shared void experiments()
