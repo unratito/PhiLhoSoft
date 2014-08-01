@@ -9,7 +9,7 @@ shared void run()
 	firstSteps.declaringTypes();
 	firstSteps.accessors();
 
-	firstSteps.experiments();
+//	firstSteps.experiments();
 }
 
 void stepTitle(String title)

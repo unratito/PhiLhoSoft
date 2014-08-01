@@ -287,6 +287,9 @@ class FirstSteps()
 			shared actual void doPrint(Integer v) { showName(); }
 			// Here, actually = override existing implementation
 			shared actual Integer getValue() => getColor().size * super.getValue();
+
+			// Refine the field defined in Object (corresponds to toString)
+			string => "Printer{``pathToPrinter``}";
 		}
 		class Bluish(shared Integer hue) satisfies BluePrint
 		{
@@ -300,7 +303,7 @@ class FirstSteps()
 		maybeBlue.doPrint(11011);
 		if (is Printer maybeBlue)
 		{
-			print("Value is ``maybeBlue.getValue()``");
+			print("Value is ``maybeBlue.getValue()`` with object ``maybeBlue``");
 		}
 		// More realistic (?)
 		String | Integer someValue(Printer | Bluish pOrB)
@@ -331,6 +334,11 @@ class FirstSteps()
 		print("One is ``indigoPrinter.isOK`` while the other is ``printerIndigo.isOK``");
 		print("One is ``indigoPrinter.getColor()`` while the other is also ``printerIndigo.getColor()``");
 
+		title("Type alias");
+		interface MapSI => Map<String, Integer>;
+		variable MapSI mapsi = HashMap([ "One"->1, "Two"->2 ]);
+		print(mapsi);
+
 		title("Enumerated types");
 		// TODO...
 	}
@@ -341,47 +349,79 @@ class FirstSteps()
 
 		void before()
 		{
-			class Exposure(arg)
+			class Exposure(arg, String? opt = null) // A mandatory argument, an optional one
 			{
-				// We expose all the members are public!
-				shared String arg;
+				// We expose all the attributes (members); they are 'public'!
+				shared String arg; // Recommended way to declare a class argument as shared
+				// Immutable attribute depending on argument
 				shared String val = "Value " + arg.reversed;
+				// Variable attribute, with initial value
 				shared variable Integer count = val.size;
 
-				// Refine (override) the method from Object
-				string => "``arg`` => ``val`` / ``count``";
+				// Immutable field (value at object creation time)
+				shared Integer dynamicValue = count * system.milliseconds;
+
+				// Not visible from outside
+				variable String internal; // Defered evaluation, done in the body of the class (equivalent to constructor's code)
+				if (exists opt) // Not null (can be done in a simpler way, it just illustrtates the point above
+				{
+					internal = arg + opt + " -> " + count.string;
+				}
+				else
+				{
+					internal = arg + " -> " + count.string;
+				}
+
+				shared void showMeaningfulInformation()
+				{
+					print("Parameter was ``arg``, secret information is ``internal``");
+				}
 			}
 
 			value exp = Exposure("Public");
-			print(exp.arg + "/" + exp.val);
-			print(exp);
+			print("Exposure: arg=``exp.arg`` / val=``exp.val`` / count=``exp.count.string`` / dynamicValue=``exp.dynamicValue.string``");
+			exp.showMeaningfulInformation();
 			exp.count = 1;
-			print(exp);
+			print("Exposure: arg=``exp.arg`` / val=``exp.val`` / count=``exp.count.string`` / dynamicValue=``exp.dynamicValue.string``");
+			exp.showMeaningfulInformation();
+			Exposure("Other", " with option").showMeaningfulInformation();
 		}
 
 		void after()
 		{
-			class Exposure(arg)
+			class Exposure(arg, String? opt = null)
 			{
-				// We change the implementation, and leave unchanged the calling code
 				shared String arg;
 				shared String val = "Value " + arg.reversed;
-				variable Integer newCount = 5 * arg.size / val.size;
-				shared Integer count => newCount;
+				// We change the implementation, and leave unchanged the calling code
+				variable Float newCount = 24.0 * arg.size / val.size;
+				// Getter
+				shared Integer count => newCount.integer;
+				// Setter
 				assign count
 				{
-					newCount = count;
+					newCount = count.float;
 				}
 
-				// Refine (override) the method from Object
-				string => "``arg`` => ``val`` / ``count``";
+				// This value is now a getter, and gets fresh information on each call
+				shared Integer dynamicValue => count * system.milliseconds;
+
+				// Here, just use the terse way...
+				variable String internal = arg + (opt else "") + " -> " + count.string;
+
+				shared void showMeaningfulInformation()
+				{
+					print("Parameter was ``arg``, secret information is ``internal``");
+				}
 			}
 
 			value exp = Exposure("Public");
-			print(exp.arg + "/" + exp.val);
-			print(exp);
+			print("Exposure: arg=``exp.arg`` / val=``exp.val`` / count=``exp.count.string`` / dynamicValue=``exp.dynamicValue.string``");
+			exp.showMeaningfulInformation();
 			exp.count = 1;
-			print(exp);
+			print("Exposure: arg=``exp.arg`` / val=``exp.val`` / count=``exp.count.string`` / dynamicValue=``exp.dynamicValue.string``");
+			exp.showMeaningfulInformation();
+			Exposure("Other", " with option").showMeaningfulInformation();
 		}
 
 		before();
@@ -410,5 +450,23 @@ class FirstSteps()
 		enabling(possible); // The assert inside doesn't validate here
 		String sure = "Hey " + (possible else "Bah");
 		print(sure);
+
+		// Can we have an interface member not shared?
+		interface HiddingStuff
+		{
+			// Variables must be shared because they *must* be refined (defined, actually).
+			shared formal variable Integer c;
+			// A member can be private, actually
+			void incr() { c++; }
+			shared Integer counter() { incr(); return c; }
+		}
+		class Stuff() satisfies HiddingStuff
+		{
+			shared actual variable Integer c = 0;
+
+			string => counter().string;
+		}
+		Stuff s = Stuff();
+		print("``s`` ``s`` ``s`` ``s``");
 	}
 }
