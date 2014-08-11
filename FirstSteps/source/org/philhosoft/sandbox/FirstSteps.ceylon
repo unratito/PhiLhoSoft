@@ -102,12 +102,12 @@ class FirstSteps()
 		print(llist);
 
 		title("Set of strings (from iterable)");
-		Set<String> set = HashSet<String>(iterable);
+		Set<String> set = HashSet { elements = iterable; };
 		print(set);
 		print(set.contains("alpha"));
 
 		title("Map of strings to strings (from sequence)");
-		Map<String, String> map = HashMap(sequenceOfEntries);
+		Map<String, String> map = HashMap { entries = sequenceOfEntries; };
 		print(map);
 		print(map["seven"]);
 
@@ -336,7 +336,7 @@ class FirstSteps()
 
 		title("Type alias");
 		interface MapSI => Map<String, Integer>;
-		variable MapSI mapsi = HashMap([ "One"->1, "Two"->2 ]);
+		variable MapSI mapsi = HashMap { entries = [ "One"->1, "Two"->2 ]; };
 		print(mapsi);
 
 		title("Enumerated types");
@@ -354,7 +354,7 @@ class FirstSteps()
 				// We expose all the attributes (members); they are 'public'!
 				shared String arg; // Recommended way to declare a class argument as shared
 				// Immutable attribute depending on argument
-				shared String val = "Value " + arg.reversed;
+				shared String val = "Value " + arg.reversed.string;
 				// Variable attribute, with initial value
 				shared variable Integer count = val.size;
 
@@ -392,7 +392,7 @@ class FirstSteps()
 			class Exposure(arg, String? opt = null)
 			{
 				shared String arg;
-				shared String val = "Value " + arg.reversed;
+				shared String val = "Value " + arg.reversed.string;
 				// We change the implementation, and leave unchanged the calling code
 				variable Float newCount = 24.0 * arg.size / val.size;
 				// Getter
