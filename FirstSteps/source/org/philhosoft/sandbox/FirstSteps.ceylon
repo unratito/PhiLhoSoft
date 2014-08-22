@@ -1,9 +1,29 @@
 import ceylon.collection { HashSet, HashMap, LinkedList }
 
+// See Enumerated types. Must be top-level...
+interface Planet of mercury | venus | earth | mars | jupiter | saturn | uranus | neptune {} // pluton is no longer there...
+object mercury satisfies Planet { string => "Mercury"; }
+object venus   satisfies Planet { string => "Venus"; }
+object earth satisfies Planet { string => "Earth"; }
+object mars satisfies Planet { string => "Mars"; }
+object jupiter satisfies Planet { string => "Jupiter"; }
+object saturn satisfies Planet { string => "Saturn"; }
+object uranus satisfies Planet { string => "Uranus"; }
+object neptune satisfies Planet { string => "Neptune"; }
+
+doc("First steps in Ceylon")
+by("Philippe Lhoste")
 class FirstSteps()
 {
+	/*
+	 The mandatory line, of course.
+	 /* This call is executed as being in the body of the class' constructor.
+	    /* Do you see comment nesting? */
+	  */
+	 */
 	print("Hello World!");
 
+	"This is a doc comment too (doc annotation is implicit here)"
 	shared void exploringLiterals()
 	{
 		stepTitle("Exploring literals");
@@ -339,8 +359,48 @@ class FirstSteps()
 		variable MapSI mapsi = HashMap([ "One"->1, "Two"->2 ]);
 		print(mapsi);
 
+		alias Primitive => Float | Integer | Boolean | String;
+		Primitive convert(String representation) // Inspired by Renato Athaydes' articles
+		{
+			return parseBoolean(representation) else parseInteger(representation) else parseFloat(representation) else representation;
+		}
+		void show(Primitive p)
+		{
+			switch (p)
+			case (is Float)   { print("Float: ``p``"); }
+			case (is Integer) { print("Integer: ``p``"); }
+			case (is Boolean) { print("Boolean: ``p``"); }
+			case (is String)  { print("String: ``p``"); }
+		}
+		show(convert("3.14"));
+		show(convert("42"));
+		show(convert("true"));
+		show(convert("whatever"));
+
 		title("Enumerated types");
-		// TODO...
+		Boolean? isBig(Planet p)
+		{
+			switch (p)
+			case (mercury, mars) { return false; }
+			case (jupiter, uranus) { return true; }
+			else { return null; }
+		}
+		void checkSize(Planet p)
+		{
+			Boolean? big = isBig(p);
+			if (exists big)
+			{
+				if (big) { print("``p`` is big"); }
+				else { print("``p`` is rather small"); }
+			}
+			else
+			{
+				print("So so for ``p``");
+			}
+		}
+		checkSize(mars);
+		checkSize(uranus);
+		checkSize(earth);
 	}
 
 	shared void accessors()
@@ -433,6 +493,8 @@ class FirstSteps()
 	{
 		stepTitle("Some experiments");
 
+		/* Foo /* And more */ Bar */
+
 		void mutating(variable Integer n, variable LinkedList<String> l) { n += 4; l.set(1, "Yo"); }
 		void enabling(String? maybe)
 		{
@@ -454,17 +516,20 @@ class FirstSteps()
 		// Can we have an interface member not shared?
 		interface HiddingStuff
 		{
-			// Variables must be shared because they *must* be refined (defined, actually).
+			// Variables (and values) must be shared because they *must* be refined (defined, actually).
+			// They cannot be assigned values (no constants in interfaces).
 			shared formal variable Integer c;
-			// A member can be private, actually
+			shared formal String name;
+			// A member can be private and not formal, actually
 			void incr() { c++; }
 			shared Integer counter() { incr(); return c; }
 		}
 		class Stuff() satisfies HiddingStuff
 		{
 			shared actual variable Integer c = 0;
+			shared actual String name = "S-";
 
-			string => counter().string;
+			string => name + counter().string;
 		}
 		Stuff s = Stuff();
 		print("``s`` ``s`` ``s`` ``s``");
