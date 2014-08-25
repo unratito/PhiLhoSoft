@@ -1,5 +1,5 @@
 *.lnk
-.ceylon/
+*.old
 .settings/
 modules/
 .project

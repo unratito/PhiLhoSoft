@@ -1,15 +1,20 @@
 import ceylon.collection { HashSet, HashMap, LinkedList }
 
 // See Enumerated types. Must be top-level...
-interface Planet of mercury | venus | earth | mars | jupiter | saturn | uranus | neptune {} // pluton is no longer there...
-object mercury satisfies Planet { string => "Mercury"; }
-object venus   satisfies Planet { string => "Venus"; }
-object earth satisfies Planet { string => "Earth"; }
-object mars satisfies Planet { string => "Mars"; }
-object jupiter satisfies Planet { string => "Jupiter"; }
-object saturn satisfies Planet { string => "Saturn"; }
-object uranus satisfies Planet { string => "Uranus"; }
-object neptune satisfies Planet { string => "Neptune"; }
+// Idea taken from the Java enum tutorial.
+interface Planet of mercury | venus | earth | mars | jupiter | saturn | uranus | neptune  // pluton is no longer there...
+{
+	shared formal Float mass;
+	shared formal Float diameter;
+}
+object mercury satisfies Planet { string => "Mercury"; mass => 3.303e+23; diameter => 2.43970M; }
+object venus   satisfies Planet { string => "Venus";   mass => 4.869e+24; diameter => 6.05180M; }
+object earth   satisfies Planet { string => "Earth";   mass => 5.976e+24; diameter => 6.37814M; }
+object mars    satisfies Planet { string => "Mars";    mass => 6.421e+23; diameter => 3.39720M; }
+object jupiter satisfies Planet { string => "Jupiter"; mass => 1.900e+27; diameter => 71.4920M; }
+object saturn  satisfies Planet { string => "Saturn";  mass => 5.688e+26; diameter => 60.2680M; }
+object uranus  satisfies Planet { string => "Uranus";  mass => 8.686e+25; diameter => 25.5590M; }
+object neptune satisfies Planet { string => "Neptune"; mass => 1.024e+26; diameter => 24.7460M; }
 
 doc("First steps in Ceylon")
 by("Philippe Lhoste")
@@ -178,7 +183,7 @@ class FirstSteps()
 
 		title("for each with index");
 		value jNumbers = [ "ichi", "ni", "san", "shi", "go", "roku", "shichi" ];
-		for (idx->jn in entries(jNumbers))
+		for (idx->jn in  jNumbers.indexed)
 		{
 			print("Counting: ``idx + 1`` is ``jn``");
 		}
@@ -388,14 +393,15 @@ class FirstSteps()
 		void checkSize(Planet p)
 		{
 			Boolean? big = isBig(p);
+			String diam = "diameter = ``p.diameter``";
 			if (exists big)
 			{
-				if (big) { print("``p`` is big"); }
-				else { print("``p`` is rather small"); }
+				if (big) { print("``p`` is big - ``diam``"); }
+				else { print("``p`` is rather small - ``diam``"); }
 			}
 			else
 			{
-				print("So so for ``p``");
+				print("So so for ``p`` - ``diam``");
 			}
 		}
 		checkSize(mars);
