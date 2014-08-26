@@ -7,10 +7,10 @@ interface Planet of mercury | venus | earth | mars | jupiter | saturn | uranus |
 	shared formal Float mass;
 	shared formal Float diameter;
 }
-object mercury satisfies Planet { string => "Mercury"; mass => 3.303e+23; diameter => 2.43970M; }
-object venus   satisfies Planet { string => "Venus";   mass => 4.869e+24; diameter => 6.05180M; }
-object earth   satisfies Planet { string => "Earth";   mass => 5.976e+24; diameter => 6.37814M; }
-object mars    satisfies Planet { string => "Mars";    mass => 6.421e+23; diameter => 3.39720M; }
+object mercury satisfies Planet { string => "Mercury"; mass => 3.303e+23; diameter =>  2.4397M; }
+object venus   satisfies Planet { string => "Venus";   mass => 4.869e+24; diameter =>  6.0518M; }
+object earth   satisfies Planet { string => "Earth";   mass => 5.976e+24; diameter =>  6.37814M; }
+object mars    satisfies Planet { string => "Mars";    mass => 6.421e+23; diameter =>  3.3972M; }
 object jupiter satisfies Planet { string => "Jupiter"; mass => 1.900e+27; diameter => 71.4920M; }
 object saturn  satisfies Planet { string => "Saturn";  mass => 5.688e+26; diameter => 60.2680M; }
 object uranus  satisfies Planet { string => "Uranus";  mass => 8.686e+25; diameter => 25.5590M; }
@@ -46,7 +46,7 @@ class FirstSteps()
 		{
 			Character c = 'z';
 			String s = "Foo déjà";
-			Integer i = 42M; // M = mega = 1e6
+			Integer i = 42T; // T = tera = 1e12
 			Integer b = $0100_1010; // Binary literal
 			Integer h = #BABE_1BEE; // Hexadecimal literal
 			Float f = 3.141_592_653_589_793_23u; // u = µ = micro = 1e-6
@@ -371,6 +371,7 @@ class FirstSteps()
 		}
 		void show(Primitive p)
 		{
+			// Switch on type
 			switch (p)
 			case (is Float)   { print("Float: ``p``"); }
 			case (is Integer) { print("Integer: ``p``"); }
@@ -385,6 +386,7 @@ class FirstSteps()
 		title("Enumerated types");
 		Boolean? isBig(Planet p)
 		{
+			// Switch on enumerated type
 			switch (p)
 			case (mercury, mars) { return false; }
 			case (jupiter, uranus) { return true; }
