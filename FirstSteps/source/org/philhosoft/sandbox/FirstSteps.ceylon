@@ -50,7 +50,7 @@ class FirstSteps()
 			Integer b = $0100_1010; // Binary literal
 			Integer h = #BABE_1BEE; // Hexadecimal literal
 			Float f = 3.141_592_653_589_793_23u; // u = µ = micro = 1e-6
-			print("I can embed a reference to a character ``c`` or string (``s.uppercased``)
+			print("I can embed a reference to a character ``c`` or string (``s.uppercased``)(package-level constant: ``constant``)
 			       or to numbers like ``i`` or even computations: ``i * f``.
 			       No formatting, though. Binary: ``b`` - Hexa: ``h``");
 		}

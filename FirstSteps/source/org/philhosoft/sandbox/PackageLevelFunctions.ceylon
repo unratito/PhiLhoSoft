@@ -11,3 +11,5 @@ void printValue(String | Integer | Float what)
 		print("Got number: ``what``");
 	}
 }
+
+String constant = "constant";
