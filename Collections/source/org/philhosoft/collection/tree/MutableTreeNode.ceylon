@@ -12,7 +12,7 @@ shared class MutableTreeNode<Element>(element = null, MutableTreeNode<Element>* 
 
 	shared actual Collection<MutableTreeNode<Element>> children => childList;
 	shared actual Element? element;
-	shared actual Boolean isLeaf => children.empty;
+	shared actual Boolean leaf => children.empty;
 
 	shared actual void setElement(Element element) {}
 

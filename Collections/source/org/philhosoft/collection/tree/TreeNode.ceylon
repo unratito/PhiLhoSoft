@@ -12,7 +12,7 @@ shared interface TreeNode<out Element, out ActualTreeNode> of ActualTreeNode
 	shared formal Collection<ActualTreeNode> children;
 
 	"Returns `true` if this node has no children."
-	shared formal Boolean isLeaf;
+	shared formal Boolean leaf;
 
 	//"Search for a given element, using the given tree transversal method. Returns null if not found."
 	// Might need to provide an equals method too, or to bound Element.

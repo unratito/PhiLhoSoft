@@ -10,7 +10,7 @@ class TestTreeNode()
 		assertNull(node.element);
 		assertNull(node.parent);
 		assertTrue(node.children.empty);
-		assertTrue(node.isLeaf);
+		assertTrue(node.leaf);
 	}
 
 	shared test void testSingleNodeTree()
@@ -20,7 +20,7 @@ class TestTreeNode()
 		assertEquals(node.element, "Root");
 		assertNull(node.parent);
 		assertTrue(node.children.empty);
-		assertTrue(node.isLeaf);
+		assertTrue(node.leaf);
 	}
 
 	shared test void testSimpleTree()
@@ -29,9 +29,9 @@ class TestTreeNode()
 		value nodeB = MutableTreeNode("B");
 		value root = MutableTreeNode("Root", nodeA, nodeB).attach();
 
-		assertFalse(root.isLeaf);
-		assertTrue(nodeA.isLeaf);
-		assertTrue(nodeB.isLeaf);
+		assertFalse(root.leaf);
+		assertTrue(nodeA.leaf);
+		assertTrue(nodeB.leaf);
 		assertTrue(root.children.contains(nodeA));
 		assertTrue(root.children.contains(nodeB));
 		assertEquals(root, nodeA.parent);
@@ -47,12 +47,12 @@ class TestTreeNode()
 		value nodeB = MutableTreeNode("B", nodeE);
 		value root = MutableTreeNode("Root", nodeA, nodeB).attach();
 
-		assertFalse(root.isLeaf);
-		assertFalse(nodeA.isLeaf);
-		assertFalse(nodeB.isLeaf);
-		assertTrue(nodeC.isLeaf);
-		assertTrue(nodeD.isLeaf);
-		assertTrue(nodeE.isLeaf);
+		assertFalse(root.leaf);
+		assertFalse(nodeA.leaf);
+		assertFalse(nodeB.leaf);
+		assertTrue(nodeC.leaf);
+		assertTrue(nodeD.leaf);
+		assertTrue(nodeE.leaf);
 		assertTrue(root.children.contains(nodeA));
 		assertTrue(root.children.contains(nodeB));
 		assertTrue(nodeA.children.contains(nodeC));

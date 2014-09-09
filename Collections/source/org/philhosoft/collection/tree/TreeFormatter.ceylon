@@ -30,7 +30,7 @@ shared String formatAsNewick<Element, ActualTreeNode>(ActualTreeNode root,
 				if (is ActualTreeNode child)
 				{
 					// Add this child for further processing
-					if (child.isLeaf)
+					if (child.leaf)
 					{
 						if (firstAtLevel)
 						{
