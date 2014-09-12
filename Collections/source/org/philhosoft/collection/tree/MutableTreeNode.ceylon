@@ -6,11 +6,10 @@ shared class MutableTreeNode<Element>(element = null, MutableTreeNode<Element>* 
 {
 	// Must be set after object construction. Bidirectional construction is hard / not possible.
 	// See https://groups.google.com/d/msg/ceylon-users/KkohG7kHI64/Io5uc3759WwJ
-	variable MutableTreeNode<Element>? mutableParent = null;
+	shared actual variable MutableTreeNode<Element>? parent = null;
 
 	MutableList<MutableTreeNode<Element>> childList = LinkedList(initialChildren);
 
-	shared actual MutableTreeNode<Element>? parent => mutableParent;
 	shared actual Collection<MutableTreeNode<Element>> children => childList;
 	shared actual Element? element;
 	shared actual Boolean isLeaf => children.empty;
@@ -19,7 +18,7 @@ shared class MutableTreeNode<Element>(element = null, MutableTreeNode<Element>* 
 
 	shared actual void removeFromParent()
 	{
-		if (exists p = mutableParent)
+		if (exists p = parent)
 		{
 			p.removeChild(this);
 		}
@@ -39,7 +38,7 @@ shared class MutableTreeNode<Element>(element = null, MutableTreeNode<Element>* 
 	{
 		for (child in node.children)
 		{
-			child.mutableParent = node;
+			child.parent = node;
 			attach(child);
 		}
 		return this;
@@ -50,14 +49,14 @@ shared class MutableTreeNode<Element>(element = null, MutableTreeNode<Element>* 
 		if (!childList.contains(child))
 		{
 			childList.add(child);
-			child.mutableParent = this;
+			child.parent = this;
 		}
 	}
 
 	void removeChild(MutableTreeNode<Element> child)
 	{
 		childList.remove(child);
-		child.mutableParent = null;
+		child.parent = null;
 	}
 
 	 //shared actual TreeNode<Element>? searchElement(
